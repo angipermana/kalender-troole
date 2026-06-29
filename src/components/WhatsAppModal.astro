@@ -1,0 +1,213 @@
+---
+---
+<div id="wa-modal" class="fixed inset-0 z-[200] hidden items-center justify-center">
+  <div class="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity" id="wa-modal-backdrop"></div>
+  <div class="bg-white rounded-2xl shadow-xl z-10 w-full max-w-md mx-4 p-6 sm:p-8 transform scale-95 opacity-0 transition-all duration-300 pointer-events-none border-t-4 border-primary" id="wa-modal-content">
+    <div class="flex justify-between items-center mb-6">
+      <h3 class="translatable text-2xl font-bold text-primary font-heading" data-id="Minta Penawaran" data-en="Request a Quote">Minta Penawaran</h3>
+      <button id="wa-modal-close" class="text-gray-400 hover:text-red-500 transition-colors p-1" aria-label="Tutup form">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+      </button>
+    </div>
+    
+    <form id="wa-form" class="space-y-4">
+      <div>
+        <label for="wa-nama" class="translatable block text-sm font-bold text-gray-700 mb-1" data-id="Nama" data-en="Name">Nama</label>
+        <input type="text" id="wa-nama" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent focus:border-accent outline-none transition-all placeholder:text-sm" placeholder="Masukkan nama Anda">
+      </div>
+      <div>
+        <label for="wa-email" class="translatable block text-sm font-bold text-gray-700 mb-1" data-id="Email" data-en="Email">Email</label>
+        <input type="email" id="wa-email" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent focus:border-accent outline-none transition-all placeholder:text-sm" placeholder="Masukkan alamat email Anda">
+      </div>
+      <div>
+        <label for="wa-phone" class="translatable block text-sm font-bold text-gray-700 mb-1" data-id="No. WhatsApp" data-en="WhatsApp No.">No. WhatsApp</label>
+        <input type="tel" id="wa-phone" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent focus:border-accent outline-none transition-all placeholder:text-sm" placeholder="Masukkan no. WhatsApp Anda">
+      </div>
+      
+      <button type="submit" class="translatable w-full mt-6 bg-wa hover:bg-green-600 text-white font-bold py-3.5 px-4 rounded-lg flex justify-center items-center gap-2 transition-transform hover:scale-[1.02] shadow-md" data-id="Minta Penawaran" data-en="Request Quote">
+        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 00-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+        Minta Penawaran
+      </button>
+    </form>
+  </div>
+</div>
+
+<style>
+  #wa-modal.open {
+    display: flex !important;
+  }
+  #wa-modal.open #wa-modal-content {
+    transform: scale(1);
+    opacity: 1;
+    pointer-events: auto;
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const modal = document.getElementById('wa-modal');
+    const backdrop = document.getElementById('wa-modal-backdrop');
+    const closeBtn = document.getElementById('wa-modal-close');
+    const form = document.getElementById('wa-form') as HTMLFormElement;
+    const namaInput = document.getElementById('wa-nama') as HTMLInputElement;
+    const emailInput = document.getElementById('wa-email') as HTMLInputElement;
+    const phoneInput = document.getElementById('wa-phone') as HTMLInputElement;
+
+    // WA Numbers for Round Robin
+    const waNumbers = [
+      '6285100757560',
+      '6287825759757',
+      '6281223571901'
+    ];
+
+    const csMapping: Record<string, string> = {
+      '6285100757560': 'Nita',
+      '6287825759757': 'Dani',
+      '6281223571901': 'Widya'
+    };
+
+    let originalMessage = "";
+    let currentMessageTemplate = "";
+
+    // Open modal function
+    const openModal = (message = "") => {
+      originalMessage = message;
+      modal?.classList.remove('hidden');
+      setTimeout(() => modal?.classList.add('open'), 10);
+    };
+
+    // Close modal function
+    const closeModal = () => {
+      modal?.classList.remove('open');
+      setTimeout(() => modal?.classList.add('hidden'), 300);
+    };
+
+    closeBtn?.addEventListener('click', closeModal);
+    backdrop?.addEventListener('click', closeModal);
+
+    // Initial fallback if rotator fails
+    let targetNumber = waNumbers[0];
+    let targetAgent = csMapping[targetNumber] || 'CS';
+
+    function setupWALinks() {
+      // Intercept all WA Links globally
+      const waLinks = document.querySelectorAll('a[href*="wa.me"]');
+      waLinks.forEach(link => {
+        const url = new URL((link as HTMLAnchorElement).href);
+        let text = url.searchParams.get('text') || "";
+
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          
+          if (link.hasAttribute("data-wa-template")) {
+            currentMessageTemplate = link.getAttribute("data-wa-template") || "";
+          } else {
+            currentMessageTemplate = "";
+          }
+          
+          const modalTitle = document.querySelector("#wa-modal-content h3");
+          const submitBtnText = document.querySelector("#wa-form button[type='submit']");
+          
+          if (link.hasAttribute("data-wa-title")) {
+            const title = link.getAttribute("data-wa-title");
+            if (modalTitle) modalTitle.textContent = title;
+            if (submitBtnText) {
+              const textNodes = Array.from(submitBtnText.childNodes).filter(node => node.nodeType === 3);
+              const lastTextNode = textNodes[textNodes.length - 1];
+              if (lastTextNode) {
+                lastTextNode.textContent = " " + title;
+              }
+            }
+          } else {
+            if (modalTitle) modalTitle.textContent = "Minta Penawaran";
+            if (submitBtnText) {
+              const textNodes = Array.from(submitBtnText.childNodes).filter(node => node.nodeType === 3);
+              const lastTextNode = textNodes[textNodes.length - 1];
+              if (lastTextNode) {
+                lastTextNode.textContent = " Minta Penawaran";
+              }
+            }
+          }
+
+          openModal(text);
+        });
+      });
+    }
+
+    // Call setupWALinks directly on load
+    setupWALinks();
+
+    // Handle form submit
+    form?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const nama = namaInput.value.trim();
+      const email = emailInput.value.trim();
+      const phone = phoneInput.value.trim();
+      
+      const submitBtn = form.querySelector('button[type="submit"]') as HTMLButtonElement;
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.style.opacity = '0.7';
+      }
+
+      // Ambil nomor antrian dari server HANYA saat submit (supaya antrian berimbang)
+      try {
+        const res = await fetch('/api/rotator.php?t=' + new Date().getTime());
+        const data = await res.json();
+        if (data && typeof data.index === 'number') {
+          const nextIndex = data.index % waNumbers.length;
+          targetNumber = waNumbers[nextIndex];
+          targetAgent = csMapping[targetNumber] || 'CS';
+        } else {
+          throw new Error("Invalid response from rotator API");
+        }
+      } catch (err) {
+        console.error("WA Rotator Error:", err);
+        // Fallback ke random jika API error
+        const nextIndex = Math.floor(Math.random() * waNumbers.length);
+        targetNumber = waNumbers[nextIndex];
+        targetAgent = csMapping[targetNumber] || 'CS';
+      }
+
+      // Kirim data ke Notion API
+      try {
+        const urlTrafik = window.location.href;
+        await fetch('/api/notion.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ nama, email, phone, url: urlTrafik, csNumber: targetNumber })
+        });
+      } catch (error) {
+        console.error('Error saving to Notion:', error);
+      }
+
+      let finalMessage = "";
+      
+      if (currentMessageTemplate && currentMessageTemplate.includes("{nama}")) {
+        finalMessage = currentMessageTemplate.replace(/{nama}/g, nama).replace(/{kota}/g, email).replace(/{agent}/g, targetAgent);
+      } else {
+        if (originalMessage && originalMessage !== "Halo {agent}, saya tertarik dengan produk Cetak Kalender Custom Troole, mohon info lebih lanjut.") {
+          finalMessage = originalMessage.replace(/{agent}/g, targetAgent);
+        } else {
+          const currentLang = localStorage.getItem('preferred-lang') || 'id';
+          if (currentLang === 'en') {
+            finalMessage = `Hello ${targetAgent}, I am interested in Troole Custom Calendar Printing products, please send more info.`;
+          } else {
+            finalMessage = `Halo ${targetAgent}, saya tertarik dengan produk Cetak Kalender Custom Troole, mohon info lebih lanjut.`;
+          }
+        }
+      }
+      
+      const waUrl = `https://wa.me/${targetNumber}?text=${encodeURIComponent(finalMessage)}`;
+      
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.style.opacity = '1';
+      }
+
+      window.open(waUrl, '_blank');
+      closeModal();
+      form.reset();
+    });
+  });
+</script>

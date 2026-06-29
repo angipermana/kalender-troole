@@ -1,0 +1,140 @@
+---
+const clients = [
+  { name: "Kemenaker", image: "/images/logo-kemenaker.jpg" },
+  { name: "LAPAN", image: "/images/logo-lapan.jpg" },
+  { name: "Mandiri", image: "/images/logo-mandiri.jpg" },
+  { name: "PLN", image: "/images/logo-pln.jpg" },
+  { name: "Polisi", image: "/images/logo-polisi.jpg" },
+  { name: "Kementerian PU", image: "/images/logo-pu.jpg" },
+  { name: "RSCM", image: "/images/logo-rscm.jpg" },
+  { name: "RSHS", image: "/images/logo-rshs.jpg" },
+  { name: "SEAMEO", image: "/images/logo-seameo.jpg" },
+];
+---
+
+<section id="partner-section" class="py-12 bg-white">
+  <div class="max-w-6xl mx-auto px-6 sm:px-12 lg:px-20">
+    <div class="text-center mb-10">
+      <h2
+        class="translatable text-2xl md:text-3xl font-extrabold text-primary font-heading mb-4 leading-tight"
+        data-id="Mitra Terpercaya Pengadaan Kalender Custom Korporat & Instansi"
+        data-en="Trusted Partner for Corporate & Institution Custom Calendar Procurement"
+      >
+        Mitra Terpercaya Pengadaan Kalender Custom Korporat & Instansi
+      </h2>
+      <p
+        class="translatable text-gray-600 max-w-3xl mx-auto text-base leading-relaxed"
+        data-id='Troole Merchandise menyediakan layanan cetak Kalender Custom 2027 eksklusif untuk kebutuhan promosi korporat dan instansi. Kami menghadirkan desain premium (Kalender Meja & Dinding) untuk memastikan brand Anda selalu diingat dan meninggalkan impresi profesional.<br/><br/>Telah dipercaya oleh lebih dari <span class="font-bold text-gray-800">1,000+</span> lembaga pemerintahan dan perusahaan besar maupun kecil.'
+        data-en='Troole Merchandise provides exclusive custom 2027 calendar printing services for corporate and institutional promotional needs. We deliver premium designs (Desk & Wall Calendars) to ensure your brand is always remembered and leaves a professional impression.<br/><br/>Trusted by over <span class="font-bold text-gray-800">1,000+</span> government institutions and companies, large and small.'
+      >
+        Troole Merchandise menyediakan layanan cetak Kalender Custom 2027 eksklusif untuk
+        kebutuhan promosi korporat dan instansi. Kami menghadirkan desain
+        premium (Kalender Meja & Dinding)
+        untuk memastikan brand Anda selalu diingat dan meninggalkan
+        impresi profesional.<br /><br />Telah dipercaya oleh lebih dari <span class="font-bold text-gray-800"
+          >1,000+</span
+        > lembaga pemerintahan dan perusahaan besar maupun kecil.
+      </p>
+    </div>
+
+    <!-- Client Logos (Slider) -->
+    <div
+      class="relative w-full overflow-hidden max-w-6xl mx-auto py-4 mask-edges border-y border-transparent"
+    >
+      <div
+        id="partner-slider"
+        class="flex items-center gap-6 md:gap-8 lg:gap-12 opacity-100 overflow-x-auto snap-x snap-mandatory scrollbar-hide scroll-smooth px-4 py-2"
+      >
+        {
+          clients.map((client) => (
+            <div class="flex-none snap-center w-20 h-20 sm:w-24 sm:h-24 rounded-full border border-gray-200 bg-white shadow-sm flex items-center justify-center p-3 hover:shadow-md hover:-translate-y-1 transition duration-300 overflow-hidden">
+              <img
+                src={client.image}
+                alt={`Logo ${client.name}`}
+                class="w-full h-full object-contain"
+              />
+            </div>
+          ))
+        }
+        {/* Duplicate for seamless feel */}
+        {
+          clients.map((client) => (
+            <div class="flex-none snap-center w-20 h-20 sm:w-24 sm:h-24 rounded-full border border-gray-200 bg-white shadow-sm flex items-center justify-center p-3 hover:shadow-md hover:-translate-y-1 transition duration-300 overflow-hidden">
+              <img
+                src={client.image}
+                alt={`Logo ${client.name}`}
+                class="w-full h-full object-contain"
+              />
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  /* Hide scrollbar for IE, Edge and Firefox */
+  .scrollbar-hide {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+  /* Soft fade on edges */
+  .mask-edges {
+    -webkit-mask-image: linear-gradient(
+      to right,
+      transparent,
+      black 10%,
+      black 90%,
+      transparent
+    );
+    mask-image: linear-gradient(
+      to right,
+      transparent,
+      black 10%,
+      black 90%,
+      transparent
+    );
+  }
+</style>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const slider = document.getElementById("partner-slider");
+    if (!slider) return;
+
+    let isHovering = false;
+
+    slider.addEventListener("mouseenter", () => (isHovering = true));
+    slider.addEventListener("mouseleave", () => (isHovering = false));
+    slider.addEventListener("touchstart", () => (isHovering = true));
+    slider.addEventListener("touchend", () => (isHovering = false));
+
+    // Auto slider logic with 2000 ms speed
+    setInterval(() => {
+      if (isHovering) return; // Pause on hover/touch
+
+      const maxScrollLeft = slider.scrollWidth - slider.clientWidth;
+
+      if (slider.scrollLeft >= maxScrollLeft - 10) {
+        // Reset to beginning seamlessly
+        slider.scrollLeft = 0;
+      } else {
+        // Scroll 1 item width
+        const firstItem = slider.querySelector("div");
+        if (!firstItem) return;
+        const itemWidth = firstItem.offsetWidth;
+        const gapString = window.getComputedStyle(slider).gap;
+        let gap = 24; // default safe fallback
+        if (gapString && gapString !== "normal") {
+          gap = parseInt(gapString);
+        }
+        slider.scrollLeft += itemWidth + gap;
+      }
+    }, 2000); // the exact 2000ms speed requested
+  });
+</script>

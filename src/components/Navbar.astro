@@ -1,0 +1,161 @@
+---
+const waMessage = encodeURIComponent("Halo {agent}, saya tertarik dengan produk Cetak Kalender Custom Troole, mohon info lebih lanjut.");
+const waLink = `https://wa.me/6285100757560?text=${waMessage}`;
+---
+<nav class="bg-primary text-white sticky top-0 z-40 shadow-md py-[2px]">
+  <div class="max-w-6xl mx-auto px-6 sm:px-12 lg:px-20">
+    <div class="flex items-center justify-between h-16">
+      <div class="flex-shrink-0 flex items-center">
+        <a href="/" class="flex items-center">
+          <img src="/images/logo-troole-putih.webp" alt="Troole Logo" class="h-8 md:h-10 w-auto" />
+        </a>
+      </div>
+      <div class="hidden md:flex items-center space-x-6">
+        <a href="#about" class="translatable hover:text-accent px-2 py-2 text-sm font-medium transition-colors" data-id="Produk" data-en="Products">Produk</a>
+        <a href="#benefit" class="translatable hover:text-accent px-2 py-2 text-sm font-medium transition-colors" data-id="Keunggulan" data-en="Features">Keunggulan</a>
+        <a href="#partner-section" class="translatable hover:text-accent px-2 py-2 text-sm font-medium transition-colors" data-id="Klien Kami" data-en="Our Clients">Klien Kami</a>
+
+        <a href={waLink} target="_blank" rel="noopener noreferrer" class="translatable bg-[#E6F4F1] text-[#3A7367] hover:bg-[#d6ebe5] px-5 py-2 rounded-full text-sm font-bold transition-colors shadow-sm" data-id="Hubungi Kami" data-en="Contact Us">
+          Hubungi Kami
+        </a>
+
+        <div class="w-px h-6 bg-white/30 mx-2"></div>
+
+        <!-- Language Switcher -->
+        <div class="flex items-center space-x-3 text-sm font-medium">
+          <span class="font-bold cursor-pointer transition-colors" id="lang-id">ID</span>
+          <button type="button" id="lang-switch" class="relative inline-flex h-6 w-12 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent bg-white/30 transition-colors duration-200 ease-in-out focus:outline-none" role="switch" aria-checked="false">
+            <span class="sr-only">Set Bahasa</span>
+            <span id="lang-knob" class="translate-x-0 pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"></span>
+          </button>
+          <span class="text-white/60 cursor-pointer transition-colors" id="lang-en">EN</span>
+        </div>
+      </div>
+      <!-- Mobile Language Switcher and Menu Button -->
+      <div class="-mr-2 flex items-center gap-4 md:hidden">
+        <div class="flex items-center space-x-2 text-xs font-medium">
+          <span class="font-bold cursor-pointer transition-colors" id="lang-id-m">ID</span>
+          <button type="button" id="lang-switch-m" class="relative inline-flex h-5 w-10 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent bg-white/30 transition-colors duration-200 ease-in-out focus:outline-none" role="switch" aria-checked="false">
+            <span class="translate-x-0 pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out" id="lang-knob-m"></span>
+          </button>
+          <span class="text-white/60 cursor-pointer transition-colors" id="lang-en-m">EN</span>
+        </div>
+        
+        <button type="button" id="mobile-menu-btn" class="bg-primary inline-flex items-center justify-center p-2 rounded-md text-white hover:bg-[#3A7367] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-primary focus:ring-white">
+          <span class="sr-only">Buka menu utama</span>
+          <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile menu, show/hide based on menu state. -->
+  <div class="hidden md:hidden bg-[#3A7367] border-t border-[#4B8D7F]" id="mobile-menu">
+    <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+      <a href="#about" class="translatable hover:bg-primary block px-3 py-2 rounded-md text-base font-medium" data-id="Produk" data-en="Products">Produk</a>
+      <a href="#benefit" class="translatable hover:bg-primary block px-3 py-2 rounded-md text-base font-medium" data-id="Keunggulan" data-en="Features">Keunggulan</a>
+      <a href="#partner-section" class="translatable hover:bg-primary block px-3 py-2 rounded-md text-base font-medium" data-id="Klien Kami" data-en="Our Clients">Klien Kami</a>
+      <a href={waLink} target="_blank" rel="noopener noreferrer" class="translatable hover:bg-primary block px-3 py-2 rounded-md text-base font-medium text-green-300" data-id="Hubungi Kami" data-en="Contact Us">Hubungi Kami</a>
+    </div>
+  </div>
+</nav>
+
+<script>
+  const btn = document.getElementById('mobile-menu-btn');
+  const menu = document.getElementById('mobile-menu');
+  const links = menu?.querySelectorAll('a');
+
+  if (btn && menu) {
+    btn.addEventListener('click', () => {
+      menu.classList.toggle('hidden');
+    });
+  }
+
+  if (links && menu) {
+    links.forEach(link => {
+      link.addEventListener('click', () => {
+        menu.classList.add('hidden');
+      });
+    });
+  }
+
+  // Translation Function
+  window.setLanguage = function(lang) {
+    document.querySelectorAll('.translatable').forEach(el => {
+      const translated = el.getAttribute('data-' + lang);
+      if (translated) {
+        el.innerHTML = translated;
+      }
+    });
+    localStorage.setItem('preferred-lang', lang);
+    updateToggleUI(lang === 'en');
+  }
+
+  function updateToggleUI(isEn) {
+    const swKnobs = [document.getElementById('lang-knob'), document.getElementById('lang-knob-m')];
+    const swBtns = [document.getElementById('lang-switch'), document.getElementById('lang-switch-m')];
+    const textIds = [document.getElementById('lang-id'), document.getElementById('lang-id-m')];
+    const textEns = [document.getElementById('lang-en'), document.getElementById('lang-en-m')];
+
+    swBtns.forEach(btn => btn?.setAttribute('aria-checked', isEn.toString()));
+    
+    swKnobs.forEach(knob => {
+      if (isEn) {
+        knob?.classList.remove('translate-x-0');
+        if (knob?.id === 'lang-knob-m') {
+          knob?.classList.add('translate-x-5');
+        } else {
+          knob?.classList.add('translate-x-6');
+        }
+      } else {
+        knob?.classList.add('translate-x-0');
+        if (knob?.id === 'lang-knob-m') {
+          knob?.classList.remove('translate-x-5');
+        } else {
+          knob?.classList.remove('translate-x-6');
+        }
+      }
+    });
+
+    textIds.forEach(id => {
+      if (isEn) {
+        id?.classList.remove('font-bold');
+        id?.classList.add('text-white/60');
+      } else {
+        id?.classList.add('font-bold');
+        id?.classList.remove('text-white/60');
+      }
+    });
+
+    textEns.forEach(en => {
+      if (isEn) {
+        en?.classList.add('font-bold');
+        en?.classList.remove('text-white/60');
+      } else {
+        en?.classList.remove('font-bold');
+        en?.classList.add('text-white/60');
+      }
+    });
+  }
+
+  // Initialize from localStorage
+  document.addEventListener('DOMContentLoaded', () => {
+    const savedLang = localStorage.getItem('preferred-lang') || 'id';
+    window.setLanguage(savedLang);
+
+    const setupLangSwitch = (btnId) => {
+      const swBtn = document.getElementById(btnId);
+      if (!swBtn) return;
+      swBtn.addEventListener('click', () => {
+        const currentLang = localStorage.getItem('preferred-lang') || 'id';
+        const nextLang = currentLang === 'id' ? 'en' : 'id';
+        window.setLanguage(nextLang);
+      });
+    };
+
+    setupLangSwitch('lang-switch');
+    setupLangSwitch('lang-switch-m');
+  });
+</script>
