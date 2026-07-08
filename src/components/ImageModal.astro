@@ -1,0 +1,70 @@
+---
+---
+<!-- Modal -->
+<div id="image-modal" class="fixed inset-0 z-50 hidden bg-black/90 items-center justify-center p-4 opacity-0 transition-opacity duration-300">
+  <button id="close-modal" class="absolute top-6 right-6 text-white hover:text-gray-300 z-50 p-2">
+    <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+    </svg>
+  </button>
+  <div class="relative w-full h-full flex flex-col items-center justify-center">
+    <img id="modal-image" src="" alt="Enlarged view" class="max-w-full max-h-[85vh] object-contain rounded-xl shadow-2xl transition-transform transform scale-95 duration-300">
+    <p id="modal-title" class="text-white text-xl font-medium text-center mt-6"></p>
+  </div>
+</div>
+
+<script>
+  const modal = document.getElementById('image-modal');
+  const modalImg = document.getElementById('modal-image');
+  const modalTitle = document.getElementById('modal-title');
+  const closeBtn = document.getElementById('close-modal');
+  const galleryItems = document.querySelectorAll('.gallery-item');
+
+  galleryItems.forEach(item => {
+    item.addEventListener('click', () => {
+      const src = item.getAttribute('data-src');
+      const title = item.getAttribute('data-title');
+      
+      if (modalImg instanceof HTMLImageElement && src) modalImg.src = src;
+      if (modalTitle && title) modalTitle.textContent = title;
+      
+      if (modal) {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        // Trigger reflow for transition
+        void modal.offsetWidth;
+        modal.classList.remove('opacity-0');
+        modal.classList.add('opacity-100');
+        if (modalImg) {
+          modalImg.classList.remove('scale-95');
+          modalImg.classList.add('scale-100');
+        }
+      }
+    });
+  });
+
+  const closeModal = () => {
+    if (modal) {
+      modal.classList.remove('opacity-100');
+      modal.classList.add('opacity-0');
+      if (modalImg) {
+        modalImg.classList.remove('scale-100');
+        modalImg.classList.add('scale-95');
+      }
+      setTimeout(() => {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }, 300);
+    }
+  };
+
+  if (closeBtn) closeBtn.addEventListener('click', closeModal);
+  if (modalImg) modalImg.addEventListener('click', (e) => e.stopPropagation());
+  if (modal) modal.addEventListener('click', closeModal);
+  
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal && !modal.classList.contains('hidden')) {
+      closeModal();
+    }
+  });
+</script>

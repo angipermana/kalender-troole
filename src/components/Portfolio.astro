@@ -1,0 +1,37 @@
+---
+import ImageGridSection from "./ImageGridSection.astro";
+
+const portfolioImages = [
+  "LG x Sinarmas.jpg",
+  "FMIPA ITB.jpg",
+  "Dire Pratama.png",
+  "PT. Surya Sealindo.jpg",
+  "DJP Batulicin.jpg",
+  "Kementrian Perindustrian.jpg",
+  "Yayasan Adhi Guna.jpg",
+  "Ocean Network Ekspress.jpg",
+  "Harrasima Inventory.jpg",
+  "Garuda Yamato Steel.jpg",
+  "DPMK ITB.jpg",
+  "PT. Rheem Indonesia.jpg",
+  "PPN Sungailiat.jpg",
+  "Kaltim Methanol Industri.jpg",
+  "Kementrian Keuangan.jpg",
+  "Polban.jpg",
+];
+
+const mappedImages = portfolioImages.map((img) => ({
+  src: `/images/Portfolio/${img}`,
+  title: img.replace(/\.[^/.]+$/, ""),
+}));
+---
+
+<ImageGridSection
+  id="portfolio"
+  bgColor="bg-[#DAEDED]"
+  title="Portfolio"
+  titleEn="Our Portfolio"
+  description="Beberapa contoh hasil produksi paket kalender yang telah kami kerjakan <b>untuk berbagai instansi dan perusahaan</b>."
+  descriptionEn="Some examples of custom calendar printing we have produced for various institutions and companies."
+  images={mappedImages}
+/>
